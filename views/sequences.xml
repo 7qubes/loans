@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+  	<!--Loan Application Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_loan_app_id'>
+  		<field name = "name">Loan Application Numbers</field>
+  		<field name = "code">sacco.loan.application</field>
+  	</record>
+  	<record model = "ir.sequence" id = "seq_loan_app_id">
+  		<field name = "name">Loan Application Number</field>
+  		<field name = "code">sacco.loan.application</field>
+  		<field name = "prefix">LOAN_APP</field>
+  		<field name = "padding">4</field>
+  	</record>
+
+    <!--Loan Batch Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_loan_batch_id'>
+      <field name = "name">Loan Batch Numbers</field>
+      <field name = "code">sacco.loan.batch</field>
+    </record>
+    <record model = "ir.sequence" id = "seq_loan_batch_id">
+      <field name = "name">Loan Batch Number</field>
+      <field name = "code">sacco.loan.batch</field>
+      <field name = "prefix">B</field>
+      <field name = "padding">4</field>
+    </record>
+
+    <!--Receipt Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_receipt_id'>
+      <field name = "name">Receipt Numbers</field>
+      <field name = "code">sacco.receipt</field>
+    </record>
+    <record model = "ir.sequence" id = "seq_receipt_id">
+      <field name = "name">Receipt Numbers</field>
+      <field name = "code">sacco.receipt</field>
+      <field name = "prefix">RCPT</field>
+      <field name = "padding">4</field>
+    </record>
+
+
+    <!--Payment Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_payment_id'>
+      <field name = "name">Payment Numbers</field>
+      <field name = "code">sacco.payment</field>
+    </record>
+    <record model = "ir.sequence" id = "seq_payment_id">
+      <field name = "name">Payment Numbers</field>
+      <field name = "code">sacco.payment</field>
+      <field name = "prefix">PAY</field>
+      <field name = "padding">4</field>
+    </record>
+
+    <!--Deposit Capitalization Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_deposit_capitalization_id'>
+      <field name = "name">Deposit Capitalization Numbers</field>
+      <field name = "code">deposit.capitalization</field>
+    </record>
+    <record model = "ir.sequence" id = "seq_deposit_capitalization_id">
+      <field name = "name">Deposit Capitalization Numbers</field>
+      <field name = "code">deposit.capitalization</field>
+      <field name = "prefix">CAPS</field>
+      <field name = "padding">4</field>
+    </record>
+
+    <!--Dividend Numbers-->
+    <record model = 'ir.sequence.type' id = 'seq_type_dividend_id'>
+      <field name = "name">Dividend Numbers</field>
+      <field name = "code">dividend</field>
+    </record>
+    <record model = "ir.sequence" id = "seq_dividend_id">
+      <field name = "name">Dividend Numbers</field>
+      <field name = "code">dividend</field>
+      <field name = "prefix">DIV</field>
+      <field name = "padding">4</field>
+    </record>
+
+  </data>
+</openerp>

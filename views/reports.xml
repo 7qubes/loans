@@ -1,0 +1,462 @@
+<openerp>
+	<data>
+		<report
+			id = "loan_repayment_schedule"
+			model = "sacco.loan"
+			string = "Loan Schedule"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.loan_schedule"
+			file = "sacco.loans.loan_schedule"
+			attachment_use = "True"
+		 />
+
+		<template id = "loan_schedule">
+					<t t-call = "report.html_container">
+						<t t-foreach = "docs" t-as="doc">
+							<t t-call = "report.external_layout">
+								<div class = "page">
+									<h2>Loan Repayment Schedule</h2>
+									<div class="row mt32 mb32">
+		                				<div class="col-xs-3" >
+		                					<p><strong>Loan No.:</strong></p>
+		                					<p><strong>Application Date:</strong></p>
+		                					<p><strong>Member Name:</strong></p>
+		                					<p><strong>Employer Code:</strong></p>
+		                					<p><strong>Issue Date:</strong></p>
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p t-field="doc.name"/>
+		                					<p t-field="doc.application_date"/>
+		                					<p t-field="doc.member_name"/>
+		                					<p t-field="doc.employer_code"/>
+		                					<p t-field="doc.issued_date"/>
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p><strong>Loan Type:</strong></p>
+		                					<p><strong>Installments:</strong></p>
+		                					<p><strong>Interest:</strong></p>
+		                					<p><strong>Approved Amount:</strong></p>
+		                					<p><strong>Loan Balance:</strong></p>
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p t-field="doc.loan_product_type"/>
+		                					<p t-field="doc.installments"/>
+		                					<p t-field="doc.interest"/>
+		                					<p t-field="doc.approved_amount"/>
+		                					<p t-field="doc.loan_balance"/>
+		                				</div>
+		                			</div>
+		                			<!--Repayment schedule table-->
+		                			<h4>Repayment Schedule</h4>
+		                			<table class="table table-condensed">
+									 	<thead>
+									 		<tr>
+									 			<th>Installment</th>
+									 			<th>Period Due</th>
+									 			<th>Loan Balance</th>
+									 			<th>Principal</th>
+									 			<th>Interest</th>
+									 			<th>Principal Paid</th>
+									 			<th>Interest Paid</th>
+									 		</tr>
+									 	</thead>
+									 	<tbody>
+									 		<tr t-foreach="doc.schedule_ids" t-as="l">
+									 			<td><span t-field= "l.installment" /></td>
+									 			<td><span t-field= "l.period_paid" /></td>
+									 			<td><span t-field= "l.loan_balance" /></td>
+									 			<td><span t-field= "l.principal" /></td>
+									 			<td><span t-field= "l.interest" /></td>
+									 			<td><span t-field= "l.principal_paid" /></td>
+									 			<td><span t-field= "l.interest_paid" /></td>
+									 		</tr>
+									 	</tbody>
+									</table>
+								</div>
+							</t>
+						</t>
+					</t>
+		</template>
+
+		<!--Loans Register-->
+		<report
+			id = "sacco_loans_register"
+			model = "sacco.loan"
+			string = "Loans Register"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.loans_register"
+			file = "sacco.report_loans_register"
+			attachment_use = "True"
+		 />
+		 <template id = "loans_register">
+			<t t-call = "report.html_container">
+
+					<t t-call = "report.external_layout">
+						<div class = "page">
+							<div class="row mt32 mb32">
+								<h2>Loans Register</h2>
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<th>Loan No.</th>
+											<th>Loan Product</th>
+											<th>Application Date</th>
+											<th>Status</th>
+											<th>Loan Amount</th>
+											<th>Loan Balance</th>
+										</tr>
+									</thead>
+									<tbody class="invoice_tbody">
+										<tr t-foreach="docs" t-as="l">
+											<td><span t-field="l.name"/></td>
+											<td><span t-field="l.loan_product_type"/></td>
+											<td><span t-field="l.application_date"/></td>
+											<td><span t-field="l.status"/></td>
+											<td><span t-field="l.approved_amount"/></td>
+											<td><span t-field="l.loan_balance"/></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</t>
+			</t>
+		</template>
+
+		<!--Receipts-->
+		<report
+			id = "sacco_receipt"
+			model = "sacco.receipt.header"
+			string = "Print Receipt"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.receipt"
+			file = "sacco.loans.receipt"
+			attachment_use = "True"
+		 />
+
+		<template id = "receipt">
+			<t t-call = "report.html_container">
+				<t t-foreach = "docs" t-as="doc">
+					<t t-call = "report.external_layout">
+						<div class = "page">
+							<h2>Receipt</h2>
+							<div class="row mt32 mb32">
+	            				<div class="col-xs-3" >
+	            					<p><strong>Receipt No.:</strong></p>
+	            					<p><strong>Date:</strong></p>
+	            					<p><strong>Received From:</strong></p>
+
+	            					<p><strong>Amount Received:</strong></p>
+
+
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p t-field="doc.name"/>
+	            					<p t-field="doc.date"/>
+	            					<p t-field="doc.received_from"/>
+
+	            					<p t-field="doc.amount_received"/>
+
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p><strong>Bank Received:</strong></p>
+
+	            					<p><strong>Cashier:</strong></p>
+	            					<p><strong>Amount in Words:</strong></p>
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p t-field="doc.bank_code"/>
+
+	            					<p t-field="doc.cashier"/>
+	            					<p t-field="doc.amount_words"/>
+	            				</div>
+	            			</div>
+	            			<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>Transaction Type</th>
+									<th>Member No.</th>
+									<th>Description</th>
+									<th>Amount</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="doc.line_ids" t-as="l">
+									<td><span t-field="l.transaction_type"/></td>
+									<td><span t-field="l.member_no"/></td>
+									<td><span t-field="l.description"/></td>
+									<td><span t-field="l.amount"/></td>
+								</tr>
+							</tbody>
+						</table>
+	            		</div>
+	            	</t>
+	            </t>
+	        </t>
+	    </template>
+		<!--Loan Batch-->
+		<report
+			id = "sacco_loan_batch"
+			model = "sacco.loan.batch.header"
+			string = "Print Batch"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.loan_batch"
+			file = "sacco.loans.loan_batch"
+			attachment_use = "True"
+		 />
+
+		 <template id = "loan_batch">
+			<t t-call = "report.html_container">
+				<t t-foreach = "docs" t-as="doc">
+					<t t-call = "report.external_layout">
+						<div class = "page">
+							<h2>Loan Batch</h2>
+							<div class="row mt32 mb32">
+	            				<div class="col-xs-3" >
+	            					<p><strong>Batch No.:</strong></p>
+	            					<p><strong>Batch Type:</strong></p>
+	            					<p><strong>Description:</strong></p>
+	            					<p><strong>Paying Bank:</strong></p>
+	            					<p><strong>Mode of Disbursement:</strong></p>
+	            					<p><strong><span t-if="doc.mode_of_disbursement == 'cheque'">Cheque No.:</span></strong></p>
+
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p t-field="doc.name"/>
+	            					<p t-field="doc.batch_type"/>
+	            					<p t-field="doc.description"/>
+	            					<p t-field="doc.paying_bank"/>
+	            					<p t-field="doc.mode_of_disbursement"/>
+	            					<p t-field="doc.cheque_no" t-if="doc.mode_of_disbursement == 'cheque'"/>
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p><strong>Total Batch Amount:</strong></p>
+	            					<p><strong>No. of Loans:</strong></p>
+	            					<p><strong>status:</strong></p>
+	            					<p><strong>Posted:</strong></p>
+	            					<p><strong>Posting Date:</strong></p>
+	            				</div>
+	            				<div class="col-xs-3" >
+	            					<p t-field="doc.total_loan_amount"/>
+	            					<p t-field="doc.no_of_loans"/>
+	            					<p t-field="doc.status"/>
+	            					<p t-field="doc.posted"/>
+	            					<p t-field="doc.posting_date"/>
+	            				</div>
+	            			</div>
+	            			<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>Loan No.</th>
+										<th>Application Date</th>
+										<th>Member Name</th>
+										<th>Staff No.</th>
+										<th>Loan Product</th>
+										<th>Requested Amount</th>
+										<th>Approved Amount</th>
+									</tr>
+								</thead>
+								<tbody class="invoice_tbody">
+									<tr t-foreach="doc.loan_ids" t-as="l">
+										<td><span t-field="l.name"/></td>
+										<td><span t-field="l.application_date"/></td>
+										<td><span t-field="l.member_no"/></td>
+										<td><span t-field="l.staff_no"/></td>
+										<td><span t-field="l.loan_product_type"/></td>
+										<td><span t-field="l.requested_amount"/></td>
+										<td><span t-field="l.approved_amount"/></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+		<!--Loan Appraisal Report-->
+		<report
+			id = "sacco_loan_appraisal_report"
+			model = "sacco.loan.appraisal.card"
+			string = "Print Appraisal Report"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.loan_appraisal"
+			file = "sacco.loans.loan_appraisal"
+			attachment_use = "True"
+		 />
+
+		 <template id = "loan_appraisal">
+			<t t-call = "report.html_container">
+				<t t-foreach = "docs" t-as="doc">
+					<t t-call = "report.external_layout">
+						<div class = "page">
+							<h2>Loan Appraisal Report</h2>
+							<div class="row mt32 mb32">
+								<h3><u>Loan Details</u></h3>
+		                				<div class="col-xs-3" >
+		                					<p><strong>Loan No.:</strong></p>
+		                					<p><strong>Application Date:</strong></p>
+		                					<p><strong>Member Name:</strong></p>
+		                					<p><strong>Employer Code:</strong></p>
+		                					<p><strong>Issue Date:</strong></p>
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p t-field="doc.name.name"/>
+		                					<p t-field="doc.name.application_date"/>
+		                					<p t-field="doc.name.member_name"/>
+		                					<p t-field="doc.name.employer_code"/>
+		                					<p t-field="doc.name.issued_date"/>
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p><strong>Loan Type:</strong></p>
+		                					<p><strong>Installments:</strong></p>
+		                					<p><strong>Interest:</strong></p>
+		                					<p><strong>Requested Amount:</strong></p>
+		                					<p><strong>Guaranteed Amount:</strong></p>
+		                					<p><strong>Approved Amount:</strong></p>
+
+		                				</div>
+		                				<div class="col-xs-3" >
+		                					<p t-field="doc.name.loan_product_type"/>
+		                					<p t-field="doc.name.installments"/>
+		                					<p t-field="doc.name.interest"/>
+		                					<p t-field="doc.name.requested_amount"/>
+		                					<p t-field="doc.name.guaranteed_amount"/>
+		                					<p t-field="doc.name.approved_amount"/>
+
+		                				</div>
+		                	</div>
+		                	<hr/>
+		                	<div class="row mt32 mb32">
+		                		<div class="col-xs-3" >
+		                			<h3><u>Shares Analysis</u></h3>
+		                			<p><strong>Current Shares:</strong></p>
+		                			<p><strong>Running Loans:</strong></p>
+		                			<p><strong>Share Balance:</strong></p>
+		                			<p><strong>Share Multiplier:</strong></p>
+		                			<p><strong>Credit Allowable(Share*:<span t-field = 'doc.name.loan_product_type.share_multiplier'/>)</strong></p>
+
+		                		</div>
+		                		<div class="col-xs-3" >
+		                			<h3>.</h3>
+		                			<p t-field="doc.name.member_no.current_deposits"/>
+		                			<p t-field="doc.name.member_no.current_loan"/>
+		                			<p t-field="doc.share_multiplier_balance"/>
+		                			<p t-field="doc.share_multiplier"/>
+		                			<p t-field="doc.share_multiplier_credit"/>
+
+		                		</div>
+		                		<div class="col-xs-3" >
+		                			<h3><u>Salary Analysis</u></h3>
+		                			<p><strong>Basic Pay:</strong></p>
+		                			<p><strong>Total Earnings:</strong></p>
+		                			<p><strong>Total Deductions:</strong></p>
+		                			<p><strong>Net Pay:</strong></p>
+		                			<p><strong>Repayment Deduction:</strong></p>
+		                			<p><strong>New net:</strong></p>
+		                			<p><strong>Factor(New net/Basic Pay):</strong></p>
+		                		</div>
+		                		<div class="col-xs-3" >
+		                			<h3>.</h3>
+		                			<p t-field="doc.name.basic_pay"/>
+		                			<p t-field="doc.name.earnings"/>
+		                			<p t-field="doc.name.deductions"/>
+		                			<p t-field="doc.name.net_pay"/>
+		                			<p t-field="doc.name.expected_repayment_deduction"/>
+		                			<p t-field="doc.name.expected_net_pay"/>
+		                			<p t-field="doc.salary_rule_factor"/>
+
+		                		</div>
+		                	</div>
+		                	<div class="row mt32 mb32">
+		                		<h3>Warnings!</h3>
+		                		<table class="table table-condensed">
+									 	<thead>
+									 		<tr>
+									 			<th>Warning</th>
+									 			<th>Description</th>
+									 		</tr>
+									 	</thead>
+									 	<tbody>
+									 		<tr t-foreach="doc.warnings" t-as="l">
+									 			<td><strong style = "color:#ff0000;"><span t-field= "l.name"/></strong></td>
+									 			<td><font style = "color:#ff0000"><span t-field= "l.description"/></font></td>
+									 		</tr>
+									 	</tbody>
+								</table>
+		                	</div>
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+		<!--Dividend Register-->
+		<report
+			id = "sacco_dividend_register_report"
+			model = "sacco.dividend.header"
+			string = "Dividend Register"
+			report_type = "qweb-pdf"
+			name = "sacco_loans.dividend_register"
+			file = "sacco.loans.dividend_register"
+			attachment_use = "True"
+		 />
+
+		<template id = "dividend_register">
+			<t t-call = "report.html_container">
+				<t t-foreach = "docs" t-as="doc">
+					<t t-call = "report.external_layout">
+						<div class = "page">
+							<h2>Dividend Register</h2>
+							<div class="row mt32 mb32">
+								<div class="col-xs-3">
+									<p><strong>Name</strong></p>
+									<p><strong>Start Date:</strong></p>
+									<p><strong>End Date</strong></p>
+								</div>
+								<div class="col-xs-3">
+									<p><span t-field='doc.name'/></p>
+									<p><span t-field='doc.start_date'/></p>
+									<p><span t-field='doc.end_date'/></p>
+								</div>
+								<div class="col-xs-3">
+									<p><strong>Dividend Calculation Method:</strong></p>
+									<p><strong>Dividend Rate:</strong></p>
+									<p><strong>Total Dividend Payable:</strong></p>
+								</div>
+								<div class="col-xs-3">
+									<p><span t-field='doc.dividend_type'/></p>
+									<p><span t-field='doc.dividend_rate'/></p>
+									<p><span t-field='doc.amount'/></p>
+								</div>
+							</div>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>Member No.</th>
+										<th>Member Name</th>
+										<th>Qualifying Shares</th>
+										<th>Gross Dividends</th>
+										<th>Withholding Tax</th>
+										<th>Dividend Payable</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr t-foreach='doc.line_ids' t-as='l'>
+										<td><span t-field='l.member_no'/></td>
+										<td><span t-field='l.member_name'/></td>
+										<td><span t-field='l.qualifying_shares'/></td>
+										<td><span t-field='l.gross_dividends'/></td>
+										<td><span t-field='l.withholding_tax'/></td>
+										<td><span t-field='l.dividend_payable'/></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+   	<record model = 'ir.ui.view' id = 'loans_form_view'>
+   		<field name = 'name'>loans.form.view</field>
+   		<field name = 'model'>sacco.loan</field>
+   		<field name = 'arch' type = 'xml'>
+   			<form>
+   				<header>
+                  <button name="appraise_loan" type = "object" string = "Appraise Loan" attrs="{'invisible': [('status', 'not in', ['draft','appraisal'])]}"/>
+                  <button name="print_appraisal_report" type = "object" string = "Appraisal Report" />
+                  <button name="generate_schedule" type = "object" string = "Generate Schedule" attrs="{'invisible': [('status', '!=', 'pending')]}"/>
+                  <button name = "approve" type = 'object' string = "Approve" attrs="{'invisible': [('status', '!=', 'pending')]}"/>
+                  <button name = "reset_to_draft" type = 'object' string = "Reset to Draft?" attrs="{'invisible': ['|',('status', '=', 'draft'),('posted','=',1)]}"/>
+                  <field name = 'status' widget = 'statusbar'/>
+               </header>
+   				<sheet>
+   					<group colspan = '2'>
+   						<group string = 'General'>
+   							<field name = 'name'/>
+                        <field name = 'application_date'/>
+							   <field name = 'member_no'/>
+                        <!--<field name = 'member_name'/>-->
+                        <field name = 'employer_code'/>
+                        <field name = 'staff_no'/>
+                        <field name = 'loan_product_type' string = "Loan Product"/>
+                        <field name = 'installments'/>
+                        <field name = 'interest'/>
+                        <field name = 'batch_no'/>
+                        <field name = 'requested_amount'/>
+                        <field name = 'approved_amount'/>
+
+   						</group>
+   						<group string = '.'>
+
+                        <field name = 'issued_date'/>
+                        <!--<field name = 'appraisal_status'/>-->
+       						<field name = 'posted'/>
+                        <field name = 'loan_balance_due'/>
+                        <field name = 'loan_balance'/>
+                        <field name = 'interest_due'/>
+                        <field name = 'interest_balance'/>
+                        <field name = 'guarantors'/>
+                        <field name = 'guaranteed_amount'/>
+                        <field name = 'cleared'/>
+                        <field name = 'defaulted'/>
+                        <field name = 'loan_purpose'/>
+
+
+   						</group>
+   					</group>
+   					<notebook>
+
+                     <page string = "Repayment Schedule">
+                        <field name = 'schedule_ids'>
+                           <tree>
+                              <field name = 'installment'/>
+                              <field name = 'period_paid'/>
+                              <field name = 'loan_balance'/>
+                              <field name = 'principal' sum = "principal"/>
+                              <field name = 'interest' sum = "interest"/>
+                              <field name = 'risk' sum = "risk"/>
+                              <field name = 'total' sum = "total"/>
+                              <field name = 'principal_paid'/>
+                              <field name = 'interest_paid'/>
+                           </tree>
+
+                        </field>
+
+
+                     </page>
+
+                     <page string = 'Member Salary Details'>
+                           <group colspan = '2'>
+                              <group>
+                                 <field name = 'basic_pay'/>
+                                 <field name = 'earnings'/>
+                                 <field name = 'deductions'/>
+
+                              </group>
+                              <group>
+                                 <field name = 'net_pay'/>
+                                 <field name = 'expected_repayment_deduction'/>
+                                 <field name = 'expected_net_pay'/>
+
+                              </group>
+                           </group>
+                     </page>
+                     <page string = 'Loan Topup Details'>
+                        <field name = 'topup_id'>
+                           <tree>
+                              <field name = 'loan_top_up'/>
+                              <field name = 'member_no'/>
+                              <field name = 'loan_type'/>
+                              <field name = 'principle_topup'/>
+                              <field name = 'total_topup'/>
+                              <field name = 'monthly_repayment'/>
+                              <field name = 'outstanding_balance'/>
+                              <field name = 'interest_rate'/>
+                              <field name = 'commission'/>
+
+                           </tree>
+                        </field>
+                     </page>
+   						<page string = 'Guarantors'>
+   							<field name = 'guarantor_id'>
+   								<tree editable = 'bottom'>
+                              <field name = 'name'/>
+
+   									<field name = 'shares' />
+                              <field name = 'deposits'/>
+
+   									<field name = 'amount_guaranteed' />
+                              <field name = 'date' />
+
+
+   								</tree>
+   							</field>
+   						</page>
+                     <page string = 'Loan Securities'>
+                        <field name = 'loan_security_id'>
+                           <tree editable = 'bottom'>
+                              <field name = 'name' />
+                              <field name = 'description' />
+                              <field name = 'value' />
+                              <field name = 'guarantee_value' />
+                              <field name = 'remarks' />
+                           </tree>
+                        </field>
+                     </page>
+
+   					</notebook>
+   				</sheet>
+            </form>
+   		</field>
+
+   		<!--/field-->
+   	</record>
+   	<record model = 'ir.ui.view' id = 'loans_tree_view'>
+   		<field name = 'name'>loans.tree.view</field>
+   		<field name = 'model'>sacco.loan</field>
+   		<field name = 'arch' type = 'xml'>
+   			<tree string = 'Loans'>
+				<field name = 'name'/>
+				<field name = 'member_no'/>
+				<field name = 'application_date'/>
+				<field name = 'loan_product_type'/>
+				<field name = 'status'/>
+            <field name = 'guaranteed_amount_percentage' widget="progressbar"/>
+   			</tree>
+   		</field>
+   	</record>
+   	<record model = 'ir.ui.view' id = 'loan_types_form_view'>
+   		<field name = 'name'>loan.types.form.view</field>
+   		<field name = 'model'>sacco.loan.types</field>
+   		<field name = 'arch' type = 'xml'>
+   			<form>
+   				<sheet>
+   					<header>
+
+   					</header>
+   					<group string = 'Loan Product' colspan = '2'>
+
+                        <group>
+   							<field name = 'code'/>
+   							<field name = 'name'/>
+      						<field name = 'repayment_method'/>
+   							<field name = 'no_of_installments'/>
+   							<field name = 'interest_rate'/>
+   							<field name = 'penalty_percentage'/>
+   							<field name = 'insurance_percentage'/>
+                        <field name = 'share_multiplier'/>
+
+   						</group>
+                     <notebook>
+                        <page string = 'Accounting'>
+                           <group>
+                              <field name = 'penalty_account'/>
+                              <field name = 'loan_account'/>
+                              <field name = 'loan_interest_account'/>
+                              <field name = 'receivable_interest_account'/>
+                              <field name = 'write_off_account'/>
+                           </group>
+
+                        </page>
+                        <page string = 'Loan Requirements'>
+                           <group>
+                              <field name = 'min_no_of_guarantors'/>
+                              <field name = 'max_no_of_guarantors'/>
+                              <field name = 'min_loan_amount'/>
+                              <field name = 'max_loan_amount'/>
+                           </group>
+                        </page>
+
+                        <page string = 'Appraisal'>
+                           <group>
+                              <field name = 'appraise_deposits'/>
+                              <field name = 'appraise_salary'/>
+                              <field name = 'appraise_guarantors'/>
+                              <field name = 'appraise_collateral'/>
+                              <field name = 'appraise_self_guarantee'/>
+                           </group>
+                        </page>
+                     </notebook>
+   					</group>
+   				</sheet>
+   			</form>
+   		</field>
+   	</record>
+
+   	<record model = 'ir.ui.view' id = 'loan_types_tree_view'>
+   		<field name = 'name'>loan.types.tree.view</field>
+   		<field name = 'model'>sacco.loan.types</field>
+   		<field name = 'arch' type = 'xml'>
+   			<tree>
+	   			<field name = 'code' />
+	   			<field name = 'name' />
+	   			<field name = 'source' />
+	   			<field name = 'no_of_installments' />
+   			</tree>
+   		</field>
+   	</record>
+
+      <record model = 'ir.ui.view' id = 'loan_batch_form_view'>
+   <field name = 'name'>Loan Batch</field>
+   <field name = 'model'>sacco.loan.batch.header</field>
+   <field name = 'arch' type = 'xml'>
+      <form string = 'Loans Batch'>
+         <sheet>
+            <header>
+
+               <button name="action_approve" type = "object" string = "Approve" />
+               <button name="action_reject" type = "object" string = "Reject" />
+               <button name="action_post" type = "object" string = "Post Batch" confirm = 'Do you want to post this batch?' />
+
+               <field name = 'status' widget = 'statusbar'/>
+            </header>
+            <group colspan = '2'>
+               <group>
+                  <field name = 'name'/>
+                  <field name = 'batch_type'/>
+                  <field name = 'description'/>
+                  <!--<field name = 'paying_bank_account'/>-->
+                  <field name = 'paying_bank'/>
+                  <field name = 'mode_of_disbursement'/>
+                  <field name = 'cheque_no' attrs="{'invisible': [('mode_of_disbursement', '!=', 'cheque')]}"/>
+               </group>
+               <group>
+                  <field name = 'total_loan_amount'/>
+                  <field name = 'no_of_loans'/>
+                  <field name = 'posting_date'/>
+                  <field name = 'posted'/>
+                  <field name = 'test'/>
+               </group>
+            </group>
+            <notebook>
+               <page string = 'Loans'>
+                  <field name = 'loan_ids'>
+                     <tree editable = 'False'>
+                        <field name = 'name'/>
+                        <field name = 'application_date'/>
+                        <field name = 'member_no'/>
+                        <field name = 'staff_no'/>
+                        <field name = 'loan_product_type'/>
+                        <field name = 'requested_amount'/>
+                        <field name = 'approved_amount'/>
+                        <field name = 'installments'/>
+                     </tree>
+                  </field>
+               </page>
+            </notebook>
+         </sheet>
+      </form>
+   </field>
+</record>
+<record model = 'ir.ui.view' id = 'loan_batch_tree_view'>
+   <field name = 'name'>Loan Batches List</field>
+   <field name = 'model'>sacco.loan.batch.header</field>
+   <field name = 'arch' type = 'xml'>
+      <tree string = 'Loan Batches List'>
+         <field name = 'name'/>
+         <field name = 'batch_type'/>
+         <field name = 'description'/>
+         <field name = 'no_of_loans'/>
+         <field name = 'total_loan_amount'/>
+
+      </tree>
+   </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_setup_form_view'>
+      <field name = 'name'>SACCO Setup</field>
+      <field name = 'model'>sacco.setup</field>
+      <field name = 'arch' type = 'xml'>
+         <form string = 'Sacco Setup'>
+            <sheet>
+               <group string = 'General'>
+                  <field name = 'miscellaneous_journal'/>
+                  <notebook>
+                     <page string = 'Member Management'>
+                        <group>
+                           <field name = 'registration_fee'/>
+                           <field name = 'registration_fee_acc'/>
+                           <field name = 'deposits_account'/>
+                           <field name = 'shares_account'/>
+                           <field name = 'member_grace_period'/>
+                        </group>
+                     </page>
+                     <page string = 'Loans'>
+                        <group>
+                           <group>
+                              <group>
+                                 <field name = 'loan_processing_fee'/>
+                                 <field name = 'loan_processing_fee_acc'/>
+                                 <field name = 'loans_journal'/>
+                                 <field name = 'loans_account'/>
+                                 <field name = 'loan_interest_account'/>
+                                 <field name = 'loan_interest_receivable_account'/>
+                                 <field name = 'loan_grace_period'/>
+                                 <field name = 'unallocated_funds'/>
+
+                              </group>
+                              <group>
+                                 <field name = 'interest_journal'/>
+                                 <field name = 'checkoff_journal'/>
+                                 <field name = 'risk_percentage'/>
+                                 <field name = 'risk_account'/>
+                              </group>
+                           </group>
+                           </group>
+
+                     </page>
+                     <page string = 'Numbering'>
+                        <group colspan = '2'>
+                           <group>
+                              <field name = 'member_application_nos'/>
+                              <field name = 'member_nos'/>
+                              <field name = 'share_transfer_nos'/>
+                              <field name = 'member_closure_nos'/>
+                              <field name = 'member_activation_nos'/>
+                              <field name = 'loan_application_nos'/>
+                              <field name = 'loan_batch_nos'/>
+                              <field name = 'receipt_nos'/>
+                              <field name = 'payment_nos'/>
+                              <field name = 'deposit_capitalization_nos'/>
+                              <field name = 'dividend_nos'/>
+                           </group>
+
+                           <group></group>
+                        </group>
+                     </page>
+                     <page string = 'Quick Start'>
+                        <group>
+                           <field name = 'opening_receivable_journal'/>
+                           <field name = 'opening_payable_journal'/>
+                           <field name = 'opening_balance_equity'/>
+                        </group>
+                     </page>
+                  </notebook>
+               </group>
+            </sheet>
+         </form>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_setup_tree_view'>
+      <field name = 'name'>SACCO Setup</field>
+      <field name = 'model'>sacco.setup</field>
+      <field name = 'arch' type = 'xml'>
+         <tree string = 'SACCO Setup'>
+            <field name = 'loans_journal'/>
+            <field name = 'loans_account'/>
+         </tree>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_member_ledger_entry_tree_view'>
+      <field name = 'name'>Member Ledger Entry</field>
+      <field name = 'model'>sacco.member.ledger.entry</field>
+      <field name = 'arch' type = 'xml'>
+         <tree string = 'Member Ledger Entry'>
+            <field name = 'entry_no'/>
+            <field name = 'member_no'/>
+            <field name = 'member_name'/>
+            <field name = 'date'/>
+            <field name = 'transaction_no'/>
+            <field name = 'transaction_type'/>
+            <field name = 'transaction_name'/>
+            <field name = 'amount'/>
+         </tree>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_loan_advice_form_view'>
+      <field name = 'name'>Monthly Advice</field>
+      <field name = 'model'>sacco.loan.advice</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <sheet>
+               <header>
+                  <button name="action_generate_advice" type = "object" string = "Generate Advice" confirm="Generate advice?" />
+               </header>
+               <group>
+                  <field name = 'name'/>
+                  <field name = 'date'/>
+                  <field name = 'amount'/>
+                  <field name = 'last_advice_date'/>
+                  <field name = 'created'/>
+               </group>
+               <notebook>
+                  <page string = 'Advice Details'>
+                     <field name = 'line_ids'>
+                        <tree editable = 'False'>
+                           <field name = 'member_name'/>
+                           <field name = 'employer_name'/>
+                           <field name = 'loan_no'/>
+                           <field name = 'loan_product_description'/>
+                           <field name = 'loan_amount'/>
+                           <field name = 'principal_repayment'/>
+                           <field name = 'interest_repayment'/>
+                           <field name = 'total'/>
+                        </tree>
+                     </field>
+                  </page>
+               </notebook>
+            </sheet>
+         </form>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_loan_advice_tree_view'>
+      <field name = 'name'>Monthly Advice</field>
+      <field name = 'model'>sacco.loan.advice</field>
+      <field name = 'arch' type = 'xml'>
+         <tree string = 'Monthly Advice'>
+            <field name = 'name'/>
+            <field name = 'date'/>
+            <field name = 'created'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_monthly_interest_form_view'>
+      <field name = 'name'>Monthly Interest</field>
+      <field name = 'model'>sacco.monthly.interest</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <sheet>
+               <header>
+                  <button name="action_generate_interest" type = "object" string = "Generate Interest" confirm="Generate Interest?" />
+                  <button name="action_post" type = "object" string = "Post" confirm="Post interest?" />
+               </header>
+               <group>
+                  <field name = 'name'/>
+                  <field name = 'date'/>
+                  <field name = 'amount'/>
+                  <field name = 'posted'/>
+               </group>
+               <notebook>
+                  <page string = 'Monthly Interest Details'>
+                     <field name = 'line_ids'>
+                        <tree>
+                           <field name = 'member_name'/>
+                           <field name = 'loan_no'/>
+                           <field name = 'loan_product_description'/>
+
+                           <field name = 'loan_amount'/>
+                           <field name = 'monthly_principal'/>
+                           <field name = 'monthly_interest'/>
+
+                        </tree>
+                     </field>
+                  </page>
+               </notebook>
+            </sheet>
+         </form>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_monthly_interest_tree_view'>
+      <field name = 'name'>Monthly Interest</field>
+      <field name = 'model'>sacco.monthly.interest</field>
+      <field name = 'arch' type = 'xml'>
+         <tree string = 'Monthly Interest'>
+            <field name = 'name'/>
+            <field name = 'date'/>
+            <field name = 'amount'/>
+            <field name = 'posted'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_checkoff_form_view'>
+      <field name = 'name'>Checkoff</field>
+      <field name = 'model'>sacco.checkoff.header</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <sheet>
+               <header>
+                  <button name="action_post" type = "object" string = "Post" confirm="Post Checkoff?" />
+                  <button name="action_validate_checkoffs" type = "object" string = "Validate Checkoffs" confirm="Validate Checkoffs?" />
+               </header>
+               <group>
+                  <field name = 'no'/>
+                  <field name = 'date'/>
+                  <field name = 'amount'/>
+                  <field name = 'posted'/>
+                  <field name = 'status' />
+               </group>
+               <notebook>
+                  <page string = 'Checkoff Details'>
+                     <field name = 'line_ids'>
+                        <tree>
+                           <!--<field name = 'no'/>-->
+                           <field name = 'pfno'/>
+                           <field name = 'member_no'/>
+
+                           <field name = 'member_name'/>
+                           <field name = 'amount'/>
+
+
+                        </tree>
+                     </field>
+                  </page>
+               </notebook>
+            </sheet>
+         </form>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_checkoff_tree_view'>
+      <field name = 'name'>Checkoff</field>
+      <field name = 'model'>sacco.checkoff.header</field>
+      <field name = 'arch' type = 'xml'>
+         <tree string = 'Sacco Checkoff List'>
+            <field name = 'no'/>
+            <field name = 'date'/>
+            <field name = 'amount'/>
+            <field name = 'posted'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_checkoff_lines_tree_view'>
+      <field name = 'name'>Checkoff Lines</field>
+      <field name = 'model'>sacco.checkoff.lines</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'no'/>
+            <field name = 'pfno'/>
+            <field name = 'member_no'/>
+
+            <field name = 'member_name'/>
+            <field name = 'amount'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_dividend_form_view'>
+      <field name = 'name'>Dividend Processing</field>
+      <field name = 'model'>sacco.dividend.header</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <header>
+               <button name = 'confirm' type = 'object' string = "Confirm" class = 'oe_highlight'/>
+               <button name = 'reset_to_draft' type = 'object' string = "Reset to Draft" class = 'oe_highlight'/>
+               <button name = 'compute_dividends' type = 'object' string = "Compute Dividends" class = 'oe_highlight'/>
+               <button name = 'action_post' type = 'object' string = "Post Dividends" class = 'oe_highlight'/>
+               <field name = 'state' widget = 'statusbar'/>
+            </header>
+            <sheet>
+               <group>
+                  <group>
+                     <field name = 'name'/>
+                     <field name = 'start_date'/>
+                     <field name = 'end_date'/>
+                     <field name = 'dividend_type'/>
+                     <field name = 'dividend_rate'/>
+                     <field name = 'amount'/>
+                  </group>
+                  <group></group>
+               </group>
+               <notebook>
+                  <page string = 'Member Dividends'>
+                     <field name = 'line_ids'>
+                        <tree editable = 'bottom'>
+                           <field name = 'member_no'/>
+                           <field name = 'member_name'/>
+                           <field name = 'qualifying_shares' sum='qualifying_shares'/>
+                           <!--<field name = 'dividends'/>-->
+                           <field name = 'gross_dividends' sum='gross_dividends'/>
+                           <field name = 'withholding_tax' sum='withholding_tax'/>
+                           <field name = 'dividend_payable' sum='dividend_payable'/>
+                        </tree>
+                     </field>
+                  </page>
+               </notebook>
+            </sheet>
+         </form>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_dividend_tree_view'>
+      <field name = 'name'>Dividends</field>
+      <field name = 'model'>sacco.dividend.header</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'name'/>
+            <field name = 'start_date'/>
+            <field name = 'end_date'/>
+            <field name = 'dividend_type'/>
+            <field name = 'dividend_rate'/>
+            <field name = 'amount'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_receipt_form_view'>
+      <field name = 'name'>Receipts</field>
+      <field name = 'model'>sacco.receipt.header</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <sheet>
+               <header>
+                  <button name="action_post" type = "object" string = "Post" confirm="Post receipt?" />
+               </header>
+               <group>
+                  <group>
+                     <field name = 'name'/>
+                     <field name = 'date'/>
+                     <field name = 'bank_code'/>
+                     <field name = 'bank_name'/>
+                     <field name = 'posted'/>
+                  </group>
+                  <group>
+                     <field name = 'amount_received'/>
+                     <field name = 'amount_words'/>
+                     <field name = 'received_from'/>
+                     
+                     <field name = 'cashier'/>
+
+                  </group>
+               </group>
+
+               <notebook>
+                  <page string = 'Receipt Lines'>
+                     <field name = 'line_ids'>
+                     <tree editable = 'bottom'>
+                           <field name = 'transaction_type'/>
+                           <field name = 'member_no'/>
+                           <field name = 'loan_no' domain="[('member_no','=',member_no),('posted','=',1)]"
+                              attrs="{'readonly': [['transaction_type', 'not in', ['repayment']]]}"/>
+                           <field name = 'description'/>
+                           <field name = 'amount'/>
+
+
+                     </tree>
+                     </field>
+                  </page>
+               </notebook>
+
+            </sheet>
+         </form>
+      </field>
+   </record>
+   <record model = 'ir.ui.view' id = 'sacco_receipts_tree_view'>
+      <field name = 'name'>Receipts List</field>
+      <field name = 'model'>sacco.receipt.header</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'name'/>
+            <field name = 'received_from'/>
+
+            <field name = 'amount_received'/>
+            <field name = 'date'/>
+            <field name = 'posted'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_payment_form_view'>
+      <field name = 'name'>Sacco Payments</field>
+      <field name = 'model'>sacco.payment.header</field>
+      <field name = 'arch' type = 'xml'>
+         <form string = 'Sacco Payments'>
+            <header>
+               <button name="action_post" type = "object" string = "Post" confirm="Post Payment?" />
+               <field name = 'status' widget = 'statusbar'/>
+            </header>
+            <sheet>
+
+            <group>
+               <group>
+                  <field name = 'name'/>
+                  <field name = 'date'/>
+                  <field name = 'bank_code'/>
+                  <field name = 'bank_name'/>
+                  <field name = 'pay_mode'/>
+                  <field name = 'cheque_no' attrs="{'invisible': [('pay_mode', '!=', 'cheque')]}"/>
+               </group>
+               <group>
+                  <field name = 'cashier'/>
+                  <field name = 'payment_to'/>
+                  <field name = 'amount_words'/>
+                  <field name = 'on_behalf_of'/>
+                  <field name = 'payment_narration'/>
+                  <field name = 'posted'/>
+
+               </group>
+            </group>
+            <notebook>
+               <page string = 'Payment Details'>
+                  <field name = 'line_ids'>
+                     <tree editable = "bottom">
+                        <field name = 'transaction_type'/>
+                        <field name = 'member_no'/>
+                        <field name = 'description'/>
+                        <field name = 'amount'/>
+                     </tree>
+                  </field>
+                  <group class="oe_subtotal_footer oe_right">
+                     <field name = 'amount' string = 'Total Amount' class="oe_subtotal_footer_separator" style="margin-bottom: 10px"/>
+                  </group>
+               </page>
+            </notebook>
+
+            </sheet>
+         </form>
+      </field>
+   </record>
+
+
+
+   <record model = 'ir.ui.view' id = 'sacco_payments_tree_view'>
+      <field name = 'name'>Payments List</field>
+      <field name = 'model'>sacco.payment.header</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'name'/>
+            <field name = 'payment_to'/>
+            <field name = 'on_behalf_of'/>
+            <field name = 'amount'/>
+            <field name = 'date'/>
+            <field name = 'posted'/>
+         </tree>
+      </field>
+   </record>
+
+   <!--Deposit Capitalization-->
+   <record model = 'ir.ui.view' id = 'sacco_deposit_capitalization_list'>
+      <field name = 'name'>Deposit Capitalization</field>
+      <field name = 'model'>sacco.deposit.capitalization</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <header>
+               <button name="action_post" type = "object" string = "Post" confirm="Post Transaction?" />
+               <field name = 'status' widget = 'statusbar'/>
+            </header>
+            <sheet>
+               <group>
+                  <field name = 'name'/>
+                  <field name = 'date'/>
+                  <field name = 'description'/>
+                  <field name = 'member_name'/>
+                  <field name = 'deposits_balance'/>
+                  <field name = 'amount'/>
+                  <field name = 'posted'/>
+                  <field name = 'comment'/>
+
+               </group>
+            </sheet>
+         </form>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_deposit_capitalization_tree_view'>
+      <field name = 'name'>Deposit Capitalization List</field>
+      <field name = 'model'>sacco.deposit.capitalization</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'name'/>
+            <field name = 'member_name'/>
+            <field name = 'description'/>
+            <field name = 'date'/>
+            <field name = 'amount'/>
+
+         </tree>
+      </field>
+   </record>
+
+   <!--Opening Balances Views-->
+   <record model = 'ir.ui.view' id = 'sacco_opening_balances_form_view'>
+      <field name = 'name'>Opening Balances</field>
+      <field name = 'model'>sacco.opening.balances</field>
+      <field name = 'arch' type = 'xml'>
+         <form>
+            <header>
+               <button name="validate" type = "object" string = "Validate Entries" confirm="Validate Entries?" />
+               <button name="action_post_opening_entries" type = "object" string = "Post Opening Balances" confirm="Post Opening Balances?" />
+               <field name = 'state' widget = 'statusbar'/>
+            </header>
+            <sheet>
+               <group>
+                  <field name = 'no'/>
+                  <field name = 'description'/>
+                  <field name = 'date'/>
+                  <field name = 'transaction_type'/>
+                  <field name = 'validated'/>
+               </group>
+               <notebook>
+                  <page string = 'Opening Entries'>
+                     <field name = 'line_ids'>
+                        <tree>
+
+                           <field name = 'transaction_no'/>
+                           <field name = 'transaction_id'/>
+                           <field name = 'member_id'/>
+                           <field name = 'member_no'/>
+                           <field name = 'member_name'/>
+                           <field name = 'amount'/>
+                        </tree>
+                     </field>
+                  </page>
+               </notebook>
+            </sheet>
+         </form>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_opening_balances_tree_view'>
+      <field name = 'name'>Opening Balances List</field>
+      <field name = 'model'>sacco.opening.balances</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'no'/>
+            <field name = 'transaction_type'/>
+            <field name = 'description'/>
+            <field name = 'date'/>
+         </tree>
+      </field>
+   </record>
+
+   <record model = 'ir.ui.view' id = 'sacco_opening_balances_lines'>
+      <field name = 'name'>Opening Entries</field>
+      <field name = 'model'>sacco.opening.balances.lines</field>
+      <field name = 'arch' type = 'xml'>
+         <tree>
+            <field name = 'transaction_no'/>
+            <field name = 'transaction_id'/>
+            <field name = 'member_id'/>
+            <field name = 'member_no'/>
+            <field name = 'member_name'/>
+            <field name = 'loan_product_id'/>
+            <field name = 'loan_product_code'/>
+            <field name = 'loan_approved_amount'/>
+            <field name = 'amount'/>
+         </tree>
+      </field>
+   </record>
+
+<!--start creating menus from here. All the pages and lists should be above for ease of searching-->
+
+
+<record model = 'ir.actions.act_window' id = 'loans_list_action'>
+	<field name = 'name'>loans.list</field>
+	<field name = 'res_model'>sacco.loan</field>
+   <field name = "domain">[('posted','=',0)]</field>
+   <field name = "filter" eval = "True"/>
+	<field name = 'view_type'>form</field>
+	<field name = 'view_mode'>tree,form,graph</field>
+
+</record>
+<menuitem name = 'Loans Management' id = 'loans_management_main_menu' parent = 'sacco_member.sacco_management_main_menu' sequence = "20"/>
+<menuitem name = 'Loan Application List' id = 'loans_list' parent = 'loans_management_main_menu' action = 'loans_list_action' sequence = "10"/>
+<!--History-->
+<record model = 'ir.actions.act_window' id = 'loans_list_action_history'>
+   <field name = 'name'>Posted Loans</field>
+   <field name = 'res_model'>sacco.loan</field>
+   <field name = "domain">[('posted','=',1)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form,graph</field>
+
+</record>
+<menuitem name = 'History' id = 'loans_management_history_main_menu' parent = 'loans_management_main_menu' sequence = "100"/>
+<menuitem name = 'Posted Loans List' id = 'posted_loans_list' parent = 'loans_management_history_main_menu' action = 'loans_list_action_history' sequence = "10"/>
+<!--End History-->
+
+<record model = 'ir.actions.act_window' id = 'monthly_advice_action'>
+   <field name = 'name'>Monthly Advice</field>
+   <field name = 'res_model'>sacco.loan.advice</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Periodic Activities' id = 'periodic_activities_main_menu' parent = 'sacco_member.sacco_management_main_menu' sequence = "30"/>
+<menuitem name = 'Monthly Advice' id = 'monthly_advice_list' parent = 'periodic_activities_main_menu' action = 'monthly_advice_action' sequence = "10"/>
+
+<record model = 'ir.actions.act_window' id = 'loan_types_action'>
+	<field name = 'name'>Loan Types</field>
+	<field name = 'res_model'>sacco.loan.types</field>
+	<field name = 'view_type'>form</field>
+	<field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Setup' id = 'sacco_setup_main_menu' parent = 'sacco_member.sacco_management_main_menu' sequence = "100"/>
+<menuitem name = 'Loan Types' id = 'loan_types_list' parent = 'sacco_setup_main_menu' action = 'loan_types_action' sequence = "10"/>
+
+<record model = 'ir.actions.act_window' id = 'loan_batches_action'>
+   <field name = 'name'>Loan Batches</field>
+   <field name = 'res_model'>sacco.loan.batch.header</field>
+   <field name = "domain">[('posted','=',0)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form,graph</field>
+</record>
+<menuitem name = 'Loan Batches List' id = 'loan_batches_list' parent = 'loans_management_main_menu'
+   action = 'loan_batches_action' sequence = "20"/>
+<!--History-->
+<record model = 'ir.actions.act_window' id = 'loan_batches_action_history'>
+   <field name = 'name'>Posted Loan Batches</field>
+   <field name = 'res_model'>sacco.loan.batch.header</field>
+   <field name = "domain">[('posted','=',1)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form,graph</field>
+</record>
+<menuitem name = 'Posted Loan Batches List' id = 'loan_batches_list_history' parent = 'loans_management_history_main_menu'
+   action = 'loan_batches_action_history' sequence = "20"/>
+<!--End history-->
+<record model = 'ir.actions.act_window' id = 'sacco_setup_action'>
+   <field name = 'name'>SACCO Setup</field>
+   <field name = 'res_model'>sacco.setup</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'SACCO Setup' id = 'sacco_setup' parent = 'sacco_setup_main_menu' action = 'sacco_setup_action'/>
+<record model = 'ir.actions.act_window' id = 'member_ledger_entry_action'>
+   <field name = 'name'>Member Ledger Entry</field>
+   <field name = 'res_model'>sacco.member.ledger.entry</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form,kanban</field>
+</record>
+<menuitem name = 'Member Ledger Entry' id = 'member_ledger' parent = 'loans_management_main_menu' action = 'member_ledger_entry_action' sequence = "30"/>
+
+<record model = 'ir.actions.act_window' id = 'monthly_interest_action'>
+   <field name = 'name'>Monthly Interest</field>
+   <field name = 'res_model'>sacco.monthly.interest</field>
+   <field name = "domain">[('posted','=',0)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+
+<menuitem name = 'Monthly Interest' id = 'monthly_interest_list' parent = 'periodic_activities_main_menu'
+   action = 'monthly_interest_action' sequence = "20"/>
+   <!--History-->
+<record model = 'ir.actions.act_window' id = 'monthly_interest_action_history'>
+   <field name = 'name'>Posted Monthly Interest</field>
+   <field name = 'res_model'>sacco.monthly.interest</field>
+   <field name = "domain">[('posted','=',1)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+
+<menuitem name = 'History' id = 'periodic_activities_history_main_menu' parent = 'periodic_activities_main_menu' sequence = "90"/>
+<menuitem name = 'Posted Monthly Interest' id = 'monthly_interest_list_history' parent = 'periodic_activities_history_main_menu' action = 'monthly_interest_action_history' sequence = "20"/>
+
+   <!--End History-->
+
+   <record model = 'ir.actions.act_window' id = 'checkoff_action'>
+   <field name = 'name'>Checkoff</field>
+   <field name = 'res_model'>sacco.checkoff.header</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+
+<menuitem name = 'Checkoff List' id = 'checkoff_list' parent = 'periodic_activities_main_menu'
+   action = 'checkoff_action' sequence = "30"/>
+
+<record model = 'ir.actions.act_window' id = 'checkoff_lines_action'>
+   <field name = 'name'>Checkoff Lines</field>
+   <field name = 'res_model'>sacco.checkoff.lines</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+
+<menuitem name = 'Checkoff Lines' id = 'checkoff_lines' parent = 'periodic_activities_main_menu'
+   action = 'checkoff_lines_action' sequence = "40"/>
+
+<!--Dividend Processing-->
+<record model = 'ir.actions.act_window' id = 'sacco_dividends_action'>
+   <field name = 'name'>Dividend Processing</field>
+   <field name = 'res_model'>sacco.dividend.header</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+
+<menuitem name = 'Dividend Processing' id = 'sacco_dividends' parent = 'periodic_activities_main_menu' action = 'sacco_dividends_action' sequence = '50'/>
+
+<record model = 'ir.actions.act_window' id = 'receipt_header_action'>
+   <field name = 'name'>Sacco Receipts</field>
+   <field name = 'res_model'>sacco.receipt.header</field>
+   <field name = "domain">[('posted','=',0)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Transactions' id = 'sacco_transactions_main_menu' parent = 'sacco_member.sacco_management_main_menu' sequence = "12"/>
+<menuitem name = 'Receipts' id = 'receipts_list' parent = 'sacco_transactions_main_menu' action = 'receipt_header_action' sequence = "10"/>
+
+
+<!--Transactions History-->
+<record model = 'ir.actions.act_window' id = 'receipt_header_action_history'>
+   <field name = 'name'>Sacco Receipts</field>
+   <field name = 'res_model'>sacco.receipt.header</field>
+   <field name = "domain">[('posted','=',1)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'History' id = 'sacco_transactions_history_main_menu' parent = 'sacco_transactions_main_menu' sequence = "90"/>
+<menuitem name = 'Posted Receipts' id = 'receipts_list_history' parent = 'sacco_transactions_history_main_menu' action = 'receipt_header_action_history' sequence = "10" />
+
+<record model = 'ir.actions.act_window' id = 'payment_header_action'>
+   <field name = 'name'>Sacco Payments</field>
+   <field name = 'res_model'>sacco.payment.header</field>
+   <field name = "domain">[('posted','=',0)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Payments' id = 'payments_list' parent = 'sacco_transactions_main_menu' action = 'payment_header_action' sequence = "20"/>
+<!--History-->
+<record model = 'ir.actions.act_window' id = 'payment_header_action_history'>
+   <field name = 'name'>Sacco Payments</field>
+   <field name = 'res_model'>sacco.payment.header</field>
+   <field name = "domain">[('posted','=',1)]</field>
+   <field name = "filter" eval = "True"/>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Posted Payments' id = 'payments_list_history' parent = 'sacco_transactions_history_main_menu' action = 'payment_header_action_history' sequence = "20"/>
+
+<record model = 'ir.actions.act_window' id = 'sacco_opening_balances_action'>
+   <field name = 'name'>SACCO QuickStart</field>
+   <field name = 'res_model'>sacco.opening.balances</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'SACCO QuickStart' id = 'sacco_opening_balances' parent = 'sacco_setup_main_menu' action = 'sacco_opening_balances_action' sequence = "90"/>
+
+<record model = 'ir.actions.act_window' id = 'sacco_opening_balances_import_sheet_action'>
+   <field name = 'name'>SACCO Opening Balances Lines</field>
+   <field name = 'res_model'>sacco.opening.balances.lines</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'SACCO Opening Entries' id = 'sacco_opening_balances_sheet' parent = 'sacco_setup_main_menu' action = 'sacco_opening_balances_import_sheet_action' sequence = "100"/>
+
+<record model = 'ir.actions.act_window' id = 'sacco_deposits_capitalization_action'>
+   <field name = 'name'>Deposit Capitalization</field>
+   <field name = 'res_model'>sacco.deposit.capitalization</field>
+   <field name = 'view_type'>form</field>
+   <field name = 'view_mode'>tree,form</field>
+</record>
+<menuitem name = 'Deposit Capitalization' id = 'sacco_deposit_capitalization' parent = 'sacco_transactions_main_menu' action = 'sacco_deposits_capitalization_action' sequence = "30"/>
+  </data>
+</openerp>

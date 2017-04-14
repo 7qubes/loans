@@ -1,0 +1,41 @@
+<openerp>
+    <data>
+        <!--
+        <record model = 'ir.ui.view' id = 'sacco_loan_bi_reports'>
+            <field name = 'name'>sacco.loan.reports</field>
+            <field name = 'model'>sacco.loan.report</field>
+            <field name = 'arch' type = 'xml'>
+                <graph string = "Loans Analysis" type = "pivot" stacked = "True">
+                    <field name = 'issue_date' type = 'row'/>
+                    <field name = 'loan_product' type = 'col'/>
+                    <field name = 'approved_amount' type = 'measure'/>
+                </graph>
+            </field>
+        </record>
+    -->
+    <!--Loans Analysis-->
+    <record model="ir.ui.view" id="sacco_loans_graph">
+           <field name="name">sacco.loans.graph</field>
+           <field name="model">sacco.loan</field>
+           <field name="arch" type="xml">
+                <graph string="Sacco Loans Reports">
+                    <field name="name" type="row"/>
+                    <field name="loan_product_type" type='row'/>
+                    <field name="approved_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sacco_loans_batches_graph">
+           <field name="name">sacco.loans.batches.graph</field>
+           <field name="model">sacco.loan.batch.header</field>
+           <field name="arch" type="xml">
+                <graph string="Sacco Loans Batches Reports">
+                    <field name="paying_bank" type="row"/>
+                    <field name="batch_type" type='row'/>
+                    <field name="total_loan_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+    </data>
+</openerp>
